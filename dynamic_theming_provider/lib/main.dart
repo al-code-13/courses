@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'pages/animation_page.dart';
 import 'pages/home.dart';
 import 'pages/homeAnimation_page.dart';
+import 'pages/img_shimmer.page.dart';
 import 'pages/introAnimated.dart';
 import 'pages/maquetacion.dart';
 import 'pages/prueba.dart';
@@ -29,7 +30,7 @@ class MaterialAppWithTheme extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: HomePage(),
-      initialRoute: '/animationPage',
+      initialRoute: '/imgPage',
       routes: {
         '/home'              :(context) => HomePage(),
         '/animationPage' :(context) => AnimatedPage(),
@@ -37,6 +38,7 @@ class MaterialAppWithTheme extends StatelessWidget {
         '/fadeInUI' :(context) => FadeInUi(),
         '/maquetaPage' :(context) => MaquetaPage(),
         '/introAnimated' :(context) => IntroAnimated(),
+        '/imgPage' :(context) => ImgPage(),
 
       },
       theme: theme.getTheme(),

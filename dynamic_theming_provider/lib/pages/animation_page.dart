@@ -9,7 +9,7 @@ class AnimatedPage extends StatefulWidget {
 
 class _AnimatedPageState extends State<AnimatedPage>
     with SingleTickerProviderStateMixin {
-  AnimationController _animation;
+
   bool time = true;
 
   @override
@@ -17,71 +17,69 @@ class _AnimatedPageState extends State<AnimatedPage>
     Future.delayed(const Duration(seconds: 4), () {
       setState(() {
         time = false;
-        _animation.dispose();
+
       });
     });
     super.initState();
-    _animation = AnimationController(
-      duration: const Duration(milliseconds: 900),
-      vsync: this,
-    )..repeat();
-  }
-
-  @override
-  void dispose() {
-    _animation.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     print(time);
-    return time ? afterCharge() : _xd();
+    return time ? afterCharge() : beforeCharge();
   }
 
-  Widget _xd() {
+  Widget beforeCharge() {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 0),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(height: 20),
-                ListTile(
-                  leading: CircleAvatar(
-                    radius: 40,
-                    backgroundImage: NetworkImage(
-                        "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSUXKFT1Qh67Lz8BWDFfu4tSykFSGqoF61UAmKvHQ05GzpDM13Y&usqp=CAU"),
-                  ),
-                  title: Text("GATOOOO 1"),
-                  trailing: CircleAvatar(radius: 20,child: Icon(Icons.subdirectory_arrow_left)),
-                ),
-                SizedBox(height: 20),
-                ListTile(
-                  leading: CircleAvatar(
-                    radius: 40,
-                    backgroundImage: NetworkImage(
-                        "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSUXKFT1Qh67Lz8BWDFfu4tSykFSGqoF61UAmKvHQ05GzpDM13Y&usqp=CAU"),
-                  ),
-                  title: Text("GATOOOO 2"),
-                  trailing: CircleAvatar(radius: 20,child: Icon(Icons.subdirectory_arrow_left)),
-                ),
-                SizedBox(height: 20),
-                ListTile(
-                  leading: CircleAvatar(
-                    radius: 40,
-                    backgroundImage: NetworkImage(
-                        "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSUXKFT1Qh67Lz8BWDFfu4tSykFSGqoF61UAmKvHQ05GzpDM13Y&usqp=CAU"),
-                  ),
-                  title: Text("GATOOOO 3"),
-                  trailing: CircleAvatar(radius: 20,child: Icon(Icons.subdirectory_arrow_left)),
-                ),
-              ],
-            ),
+        child: Container(
+          padding: EdgeInsets.all(30),
+          child: Column(
+            children: [0, 1, 2, 3]
+                .map((_) => Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: 48.0,
+                            height: 48.0,
+                            child: Icon(Icons.opacity),
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                          ),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: double.infinity,
+                                  height: 15,
+                                  child: Text("Titulo"),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 2.0),
+                                ),
+                                Container(
+                                  width: double.infinity,
+                                  height: 15,
+                                  child: Text("Subtitle"),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 2.0),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ))
+                .toList(),
           ),
         ),
       ),
@@ -92,69 +90,62 @@ class _AnimatedPageState extends State<AnimatedPage>
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(height: 20),
-              FadeIn(
-                2,
-                SizedBox(
-                  child: Shimmer.fromColors(
-                    baseColor: Colors.grey.shade300,
-                    highlightColor: Colors.white,
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        radius: 40,
-                        backgroundImage: NetworkImage(
-                            "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSUXKFT1Qh67Lz8BWDFfu4tSykFSGqoF61UAmKvHQ05GzpDM13Y&usqp=CAU"),
+        child: Container(
+          padding: EdgeInsets.all(30),
+          child: FadeIn(
+            2,
+            Shimmer.fromColors(
+              baseColor: Colors.grey.shade300,
+              highlightColor: Colors.white,
+              child: Column(
+                children: [0, 1, 2, 3]
+                    .map(
+                      (_) => Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: 48.0,
+                              height: 48.0,
+                              color: Colors.white,
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8.0),
+                            ),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    width: double.infinity,
+                                    height: 15,
+                                    color: Colors.white,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 2.0),
+                                  ),
+                                  Container(
+                                    width: double.infinity,
+                                    height: 15,
+                                    color: Colors.white,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 2.0),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
                       ),
-                      title: Container(height: 30,width: 20,color: Colors.red,),
-                      trailing: CircleAvatar(radius: 20,child: Icon(Icons.subdirectory_arrow_left)),
-                    ),
-                  ),
-                ),
+                    )
+                    .toList(),
               ),
-              SizedBox(height: 20),
-              FadeIn(
-                2,
-                SizedBox(
-                  child: Shimmer.fromColors(
-                    baseColor: Colors.grey.shade300,
-                    highlightColor: Colors.white,
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        radius: 40,
-                        backgroundImage: NetworkImage(
-                            "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSUXKFT1Qh67Lz8BWDFfu4tSykFSGqoF61UAmKvHQ05GzpDM13Y&usqp=CAU"),
-                      ),
-                      title: Container(height: 30,width: 20,color: Colors.red,),
-                      trailing: CircleAvatar(radius: 20,child: Icon(Icons.subdirectory_arrow_left)),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 20),FadeIn(
-                2,
-                SizedBox(
-                  child: Shimmer.fromColors(
-                    baseColor: Colors.grey.shade300,
-                    highlightColor: Colors.white,
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        radius: 40,
-                        backgroundImage: NetworkImage(
-                            "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSUXKFT1Qh67Lz8BWDFfu4tSykFSGqoF61UAmKvHQ05GzpDM13Y&usqp=CAU"),
-                      ),
-                      title: Container(height: 30,width: 20,color: Colors.red,),
-                      trailing: CircleAvatar(radius: 20,child: Icon(Icons.subdirectory_arrow_left)),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 20),
-            ],
+            ),
           ),
         ),
       ),
