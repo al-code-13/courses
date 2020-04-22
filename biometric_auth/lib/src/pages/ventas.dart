@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:intl/intl.dart';
 
 class VentasPage extends StatelessWidget {
   const VentasPage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final formato = NumberFormat('#,###');
     final int ventasTotales = 10542800;
     List<Venta> ventas = [
       Venta('Ventas telefonicas', 1500800, Colors.purple),
@@ -217,7 +219,7 @@ class VentasPage extends StatelessWidget {
                                         fontSize: 16, color: Colors.black45)),
                               ),
                               Text(
-                                '\$ 10542800',
+                                '\$ ${(formato.format(ventasTotales))}',
                                 style: TextStyle(fontSize: 40),
                               )
                             ],

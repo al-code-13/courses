@@ -1,80 +1,94 @@
-
 import 'package:biometric_auth/src/custom_grid_view/flutter_staggered_grid_view.dart';
-import 'package:biometric_auth/src/pages/ventas.dart';
+import 'package:biometric_auth/src/custom_grid_view/src/widgets/staggered_tile.dart';
+import 'package:biometric_auth/src/pages/homepage.dart';
 import 'package:flutter/material.dart';
-import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 import 'package:intl/intl.dart';
+import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
-import 'clientes_page.dart';
-import 'domiciliarios_page.dart';
 import 'example_view.dart';
-import 'heatmap.dart';
 
 List<Widget> _tiles = const <Widget>[
-  const _CustomGridCard(
-    title: 'Clientes',
-    color: Colors.lightBlue,
-    iconData: Icons.person_pin_circle,
-    destino: ClientesPage(),
-    valor: 200,
-    meta: 400,
-    subtitle: 'Total',
-  ),
+  // const _CustomGridCard(
+  //   title: 'Clientes',
+  //   color: Colors.lightBlue,
+  //   iconData: Icons.person_pin_circle,
+  //   destino: ClientesPage(),
+  //   valor: 200,
+  //   meta: 400,
+  //   subtitle: 'Total',
+  // ),
   const _CustomGridCard(
     title: 'Ventas',
-    color: Colors.green,
+    color: Colors.red,
     iconData: Icons.attach_money,
-    destino: VentasPage(),
     valor: 10542800,
     meta: 15542800,
     subtitle: 'Total',
   ),
+
   const _CustomGridCard(
-    title: 'Estadisticas',
-    color: Colors.amber,
-    iconData: Icons.insert_chart,
-    destino: HomePage(),
-    valor: 1020,
-    meta: 2020,
-    subtitle: 'Facturas',
+    title: 'Ventas',
+    color: Colors.blue,
+    iconData: Icons.attach_money,
+    valor: 10542800,
+    meta: 15542800,
+    subtitle: 'Total',
   ),
+
   const _CustomGridCard(
-    title: 'Publicidad',
-    color: Colors.brown,
-    iconData: Icons.public,
-    destino: HomePage(),
-    valor: 1020,
-    meta: 1203,
-    subtitle: 'Alertas',
+    title: 'Ventas',
+    color: Colors.green,
+    iconData: Icons.attach_money,
+    valor: 10542800,
+    meta: 15542800,
+    subtitle: 'Total',
   ),
-  const _CustomGridCard(
-    title: 'Domiciliarios',
-    color: Colors.deepOrange,
-    iconData: Icons.send,
-    destino: DomiciliariosPage(),
-    valor: 4,
-    meta: 10,
-    subtitle: 'Activos',
-  ),
-  const _CustomGridCard(
-    title: 'Mapa de calor',
-    color: Colors.indigo,
-    iconData: Icons.map,
-    destino: HeathMapPage(),
-    valor: 1,
-    meta: 3,
-    subtitle: 'Sedes',
-  ),
+  // const _CustomGridCard(
+  //   title: 'Estadisticas',
+  //   color: Colors.amber,
+  //   iconData: Icons.insert_chart,
+  //   destino: MainIndicators(),
+  //   valor: 1020,
+  //   meta: 2020,
+  //   subtitle: 'Facturas',
+  // ),
+  // const _CustomGridCard(
+  //   title: 'Publicidad',
+  //   color: Colors.brown,
+  //   iconData: Icons.public,
+  //   destino: MainIndicators(),
+  //   valor: 1020,
+  //   meta: 1203,
+  //   subtitle: 'Alertas',
+  // ),
+  // const _CustomGridCard(
+  //   title: 'Domiciliarios',
+  //   color: Colors.deepOrange,
+  //   iconData: Icons.send,
+  //   destino: DomiciliariosPage(),
+  //   valor: 4,
+  //   meta: 10,
+  //   subtitle: 'Activos',
+  // ),
+  // const _CustomGridCard(
+  //   title: 'Mapa de calor',
+  //   color: Colors.indigo,
+  //   iconData: Icons.map,
+  //   destino: HeathMapPage(),
+  //   valor: 1,
+  //   meta: 3,
+  //   subtitle: 'Sedes',
+  // ),
 ];
 
-class HomePage extends StatelessWidget {
-  const HomePage({Key key}) : super(key: key);
+class MainIndicators extends StatelessWidget {
+  const MainIndicators({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     List<StaggeredTile> _staggeredTiles = const <StaggeredTile>[
       const StaggeredTile.count(4, 1.8),
-      const StaggeredTile.count(2, 2),
+      const StaggeredTile.count(2, 2.5),
       const StaggeredTile.count(2, 2),
       const StaggeredTile.count(2, 2),
       const StaggeredTile.count(2, 2),
@@ -84,9 +98,11 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: colorFondo,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.lightBlue,
+        centerTitle: true,
         title: Text(
-          'Gerentes',
+          'Indicadores Globales',
         ),
       ),
       body: Padding(
@@ -100,6 +116,35 @@ class HomePage extends StatelessWidget {
           padding: const EdgeInsets.all(4.0),
         ),
       ),
+      bottomNavigationBar: Container(
+        height: 60,
+        color: Colors.lightBlue,
+        child: InkWell(
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                  builder: (BuildContext context) => HomePage()),
+            );
+          },
+          child: Padding(
+            padding: EdgeInsets.only(top: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(
+                  Icons.home,
+                  color: Colors.white,
+                ),
+                SizedBox(width: 10),
+                Text(
+                  'Detalles',
+                  style: TextStyle(fontSize: 20),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -109,7 +154,6 @@ class _CustomGridCard extends StatelessWidget {
       {this.title,
       this.color,
       this.iconData,
-      this.destino,
       this.valor,
       this.meta,
       this.subtitle});
@@ -117,7 +161,6 @@ class _CustomGridCard extends StatelessWidget {
   final String title;
   final Color color;
   final IconData iconData;
-  final Widget destino;
   final double valor;
   final double meta;
   final String subtitle;
@@ -134,12 +177,14 @@ class _CustomGridCard extends StatelessWidget {
         progressBarColor: colorContenido,
         hideShadow: true);
 
-  final info02 = InfoProperties(
+    final info02 = InfoProperties(
         topLabelStyle: TextStyle(
             color: colorContenido, fontSize: 22, fontWeight: FontWeight.w600),
         topLabelText: '$subtitle',
         bottomLabelStyle: TextStyle(
-            color: Colors.grey, fontSize: title == 'Ventas'? 10: 14, fontWeight: FontWeight.w300),
+            color: Colors.grey,
+            fontSize: title == 'Ventas' ? 10 : 14,
+            fontWeight: FontWeight.w300),
         bottomLabelText: title == 'Ventas'
             ? 'Meta : \$${(formato.format(meta))}'
             : 'Meta : ${(formato.format(meta))}',
@@ -149,7 +194,7 @@ class _CustomGridCard extends StatelessWidget {
             fontWeight: FontWeight.w100),
         modifier: (double value) {
           final values = (valor).toInt();
-          
+
           return title == 'Ventas'
               ? '\$${formato.format(values)}'
               : '${formato.format(values)}';
@@ -184,8 +229,7 @@ class _CustomGridCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(8)),
       color: colorFondo,
       child: InkWell(
-        onTap: () => Navigator.of(context).push(
-            MaterialPageRoute(builder: (BuildContext context) => destino)),
+        // onTap: () => null,
         child: Center(
           child: Padding(
               padding: const EdgeInsets.all(4.0),
@@ -201,11 +245,7 @@ class _CustomGridCard extends StatelessWidget {
                         fontWeight: FontWeight.bold),
                   ),
                   Expanded(
-                    child: Icon(
-                      iconData,
-                      color: colorContenido,
-                      size: 80,
-                    ),
+                    child: example02,
                   ),
                 ],
               )),
