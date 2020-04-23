@@ -2,200 +2,270 @@ import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:intl/intl.dart';
 
-class VentasPage extends StatelessWidget {
+class VentasPage extends StatefulWidget {
   const VentasPage({Key key}) : super(key: key);
 
   @override
+  _VentasPageState createState() => _VentasPageState();
+}
+
+class _VentasPageState extends State<VentasPage> {
+  final formato = NumberFormat('#,###');
+
+  DateTime fechaInicial;
+  DateTime fechaFinal;
+  List<PedidosTienda> dataPedidosTienda = [
+    PedidosTienda('Chia Fruver', 154, 20042540),
+    PedidosTienda('Bog sta fe', 106, 14683970),
+    PedidosTienda('Bog Cdad Jardin', 100, 14326670),
+    PedidosTienda('Bog Suba Vll eliza', 70, 10377460),
+    PedidosTienda('Med volador', 69, 9179410),
+    PedidosTienda('Med Tarapaca', 68, 8689390),
+    PedidosTienda('Bog quintaparedes', 59, 7214370),
+    PedidosTienda('Bog barranxas', 36, 5814170),
+    PedidosTienda('Med el diamante', 34, 5016740),
+    PedidosTienda('Bog suba salitre', 33, 4228320),
+    PedidosTienda('Bog la uribe', 28, 2944420),
+    PedidosTienda('Bog san javier', 19, 2741700),
+    PedidosTienda('Bog country', 18, 2500430),
+    PedidosTienda('Bog floresta', 14, 1792870),
+  ];
+
+  List<charts.Series<PedidosTienda, String>> _dataPedidosTiendaCant() {
+    return [
+      charts.Series<PedidosTienda, String>(
+        id: 'Pedidos dia',
+        data: dataPedidosTienda,
+        domainFn: (PedidosTienda pedido, __) =>
+            "Fecha: ${pedido.shop} => Cant ",
+        measureFn: (PedidosTienda pedido, __) => pedido.amount,
+        colorFn: (_, __) =>
+            charts.ColorUtil.fromDartColor(getPrimaryColor(context)),
+        labelAccessorFn: (PedidosTienda pedido, _) =>
+            '${pedido.shop}: ${pedido.amount}',
+        insideLabelStyleAccessorFn: (PedidosTienda pedido, _) {
+          return new charts.TextStyleSpec(
+              color: charts.ColorUtil.fromDartColor(
+                  Theme.of(context).textTheme.caption.color)); //color de adentro
+        },
+        outsideLabelStyleAccessorFn: (PedidosTienda pedido, _) {
+          return new charts.TextStyleSpec(
+              color: charts.ColorUtil.fromDartColor(
+                  Colors.blue)); //color de afuera
+        },  
+      )
+    ];
+  }
+
+  List<charts.Series<PedidosTienda, String>> _dataPedidosTiendaVal() {
+    return [
+      charts.Series<PedidosTienda, String>(
+        id: 'Pedidos dia',
+        data: dataPedidosTienda,
+        domainFn: (PedidosTienda pedido, __) =>
+            "Fecha: ${pedido.shop} => valor ",
+        measureFn: (PedidosTienda pedido, __) => pedido.value,
+        colorFn: (_, __) =>
+            charts.ColorUtil.fromDartColor(getPrimaryColor(context)),
+        labelAccessorFn: (PedidosTienda pedido, _) =>
+            '${pedido.shop}: ${formato.format(pedido.value)}',
+        insideLabelStyleAccessorFn: (PedidosTienda pedido, _) {
+          return new charts.TextStyleSpec(
+              color: charts.ColorUtil.fromDartColor(
+                  Colors.blue)); //color de adentro
+        },
+        outsideLabelStyleAccessorFn: (PedidosTienda pedido, _) {
+          return new charts.TextStyleSpec(
+              color: charts.ColorUtil.fromDartColor(
+                  Colors.blue)); //color de afuera
+        },
+      )
+    ];
+  }
+
+  List<PedidosDia> dataPedidosDia = [
+    PedidosDia(DateTime.parse('2020-04-10'), 7, 399560),
+    PedidosDia(DateTime.parse('2020-04-11'), 21, 2338430),
+    PedidosDia(DateTime.parse('2020-04-12'), 42, 5623470),
+    PedidosDia(DateTime.parse('2020-04-13'), 25, 3729670),
+    PedidosDia(DateTime.parse('2020-04-14'), 18, 2180310),
+    PedidosDia(DateTime.parse('2020-04-15'), 18, 3020260),
+    PedidosDia(DateTime.parse('2020-04-16'), 13, 1990000),
+    PedidosDia(DateTime.parse('2020-04-17'), 46, 7003620),
+    PedidosDia(DateTime.parse('2020-04-18'), 294, 38556130),
+    PedidosDia(DateTime.parse('2020-04-19'), 113, 15531570),
+    PedidosDia(DateTime.parse('2020-04-20'), 227, 32647330),
+  ];
+
+  bool value = false;
+  List<PedidosDia> data;
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  List<charts.Series<PedidosDia, String>> _dataPedidosDiaCant() {
+    return [
+      charts.Series<PedidosDia, String>(
+        id: 'Pedidos dia',
+        data: data,
+        domainFn: (PedidosDia pedido, __) =>
+            "Fecha: ${pedido.day.month}/${pedido.day.day} => Cant ",
+        measureFn: (PedidosDia pedido, __) => pedido.amount,
+        colorFn: (_, __) =>
+            charts.ColorUtil.fromDartColor(getPrimaryColor(context)),
+        labelAccessorFn: (PedidosDia pedido, _) =>
+            '${pedido.day.day}/${pedido.day.month}/${pedido.day.year}: ${pedido.amount}',
+        insideLabelStyleAccessorFn: (PedidosDia pedido, _) {
+          return new charts.TextStyleSpec(
+              color: charts.ColorUtil.fromDartColor(
+                  Colors.blue)); //color de adentro
+        },
+        outsideLabelStyleAccessorFn: (PedidosDia pedido, _) {
+          return new charts.TextStyleSpec(
+              color: charts.ColorUtil.fromDartColor(
+                  Colors.blue)); //color de afuera
+        },
+      )
+    ];
+  }
+
+  List<charts.Series<PedidosDia, String>> _dataPedidosDiaVal() {
+    return [
+      charts.Series<PedidosDia, String>(
+        id: 'Pedidos dia',
+        data: data,
+        domainFn: (PedidosDia pedido, __) =>
+            "Fecha: ${pedido.day.month}/${pedido.day.day} => valor ",
+        measureFn: (PedidosDia pedido, __) => pedido.value,
+        colorFn: (_, __) =>
+            charts.ColorUtil.fromDartColor(getPrimaryColor(context)),
+        labelAccessorFn: (PedidosDia pedido, _) =>
+            '${pedido.day.day}/${pedido.day.month}/${pedido.day.year}: ${pedido.value}',
+        insideLabelStyleAccessorFn: (PedidosDia pedido, _) {
+          return new charts.TextStyleSpec(
+              color: charts.ColorUtil.fromDartColor(
+                  Colors.blue)); //color de adentro
+        },
+        outsideLabelStyleAccessorFn: (PedidosDia pedido, _) {
+          return new charts.TextStyleSpec(
+              color: charts.ColorUtil.fromDartColor(
+                  Colors.blue)); //color de afuera
+        },
+      )
+    ];
+  }
+
+  DateTime selectedDate = DateTime.now();
+
+  Color getPrimaryColor(BuildContext context) {
+    Color color = Theme.of(context).primaryColor;
+    return color;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final formato = NumberFormat('#,###');
-    final int ventasTotales = 10542800;
-    List<Venta> ventas = [
-      Venta('Ventas telefonicas', 1500800, Colors.purple),
-      Venta('Ventas por plataformas', 3040000, Colors.blue),
-      Venta('Ventas en punto', 6002000, Colors.green),
-      Venta('Ticket promedio', 170133, Colors.orangeAccent[700]),
-    ];
-    List<charts.Series<Venta, String>> _dataCanales() {
-      return [
-        charts.Series<Venta, String>(
-          id: 'Canales',
-          data: ventas,
-          domainFn: (Venta venta, __) => venta.title,
-          measureFn: (Venta venta, __) => venta.value,
-          labelAccessorFn: (Venta venta, _) {
-            return '${((venta.value * 100) / ventasTotales).round()} %';
-          },
-          colorFn: (Venta venta, __) =>
-              charts.ColorUtil.fromDartColor(venta.color),
-        )
-      ];
-    }
-
-    var dataVentas = [
-      Ventas('Bog. cedritos', 3000, Colors.blue),
-      Ventas('Medellin', 2000, Colors.purple),
-      Ventas('Cali', 1000, Colors.green),
-      Ventas('Bog. Suba', 3000, Colors.orangeAccent[700]),
-      Ventas('Bogota', 4000, Colors.red),
-    ];
-    List<charts.Series<Ventas, String>> _dataVentas() {
-      return [
-        charts.Series<Ventas, String>(
-          id: 'Ventas',
-          data: dataVentas,
-          domainFn: (Ventas venta, __) => venta.tipo,
-          measureFn: (Ventas venta, __) => venta.valor,
-          labelAccessorFn: (Ventas venta, _) {
-            return '${venta.valor} %';
-          },
-          colorFn: (Ventas venta, __) =>
-              charts.ColorUtil.fromDartColor(venta.color),
-        )
-      ];
-    }
-
-    var chefMenu = [
-      PuntosDeVenta('Cedritos', 24),
-      PuntosDeVenta('Chapinero', 36),
-      PuntosDeVenta('Plaza', 13),
-      PuntosDeVenta('Bogota Cedritos', 30),
-      PuntosDeVenta('Bogota Chapinero', 40),
-      PuntosDeVenta('Bogota Plaza', 10),
-      PuntosDeVenta('Bogota Kennedy', 10),
-      PuntosDeVenta('Chia', 10),
-      PuntosDeVenta('Cartagena', 10),
-      PuntosDeVenta('Bog. Centro Mayor ', 10),
-      PuntosDeVenta('Bogota Fontibon ', 10),
-      PuntosDeVenta('Bogota Suba ', 10),
-      PuntosDeVenta('Medellin ', 10),
-    ];
-    var domicilios = [
-      PuntosDeVenta('Cedritos', 67),
-      PuntosDeVenta('Chapinero', 15),
-      PuntosDeVenta('Plaza', 23),
-      PuntosDeVenta('Bogota Cedritos', 30),
-      PuntosDeVenta('Bogota Chapinero', 40),
-      PuntosDeVenta('Bogota Plaza', 10),
-      PuntosDeVenta('Bogota Kennedy', 10),
-      PuntosDeVenta('Chia', 10),
-      PuntosDeVenta('Cartagena', 10),
-      PuntosDeVenta('Bog. Centro Mayor ', 10),
-      PuntosDeVenta('Bogota Fontibon ', 10),
-      PuntosDeVenta('Bogota Suba ', 10),
-      PuntosDeVenta('Medellin ', 10),
-    ];
-    var uberEats = [
-      PuntosDeVenta('Cedritos', 55),
-      PuntosDeVenta('Chapinero', 27),
-      PuntosDeVenta('Plaza', 12),
-      PuntosDeVenta('Bogota Cedritos', 30),
-      PuntosDeVenta('Bogota Chapinero', 40),
-      PuntosDeVenta('Bogota Plaza', 10),
-      PuntosDeVenta('Bogota Kennedy', 10),
-      PuntosDeVenta('Chia', 10),
-      PuntosDeVenta('Cartagena', 10),
-      PuntosDeVenta('Bog. Centro Mayor ', 10),
-      PuntosDeVenta('Bogota Fontibon ', 10),
-      PuntosDeVenta('Bogota Suba ', 10),
-      PuntosDeVenta('Medellin ', 10),
-    ];
-    var rappi = [
-      PuntosDeVenta('Cedritos', 55),
-      PuntosDeVenta('Chapinero', 27),
-      PuntosDeVenta('Plaza', 12),
-      PuntosDeVenta('Bogota Cedritos', 30),
-      PuntosDeVenta('Bogota Chapinero', 40),
-      PuntosDeVenta('Bogota Plaza', 10),
-      PuntosDeVenta('Bogota Kennedy', 10),
-      PuntosDeVenta('Chia', 10),
-      PuntosDeVenta('Cartagena', 10),
-      PuntosDeVenta('Bog. Centro Mayor ', 10),
-      PuntosDeVenta('Bogota Fontibon ', 10),
-      PuntosDeVenta('Bogota Suba ', 10),
-      PuntosDeVenta('Medellin ', 10),
-    ];
-    List<charts.Series<PuntosDeVenta, String>> _dataPuntos() {
-      return [
-        charts.Series<PuntosDeVenta, String>(
-          id: 'Ridder',
-          domainFn: (PuntosDeVenta punto, __) => punto.nombre,
-          measureFn: (PuntosDeVenta punto, __) => punto.valor,
-          data: chefMenu,
-          colorFn: (_, __) => charts.ColorUtil.fromDartColor(Colors.green),
-        ),
-        charts.Series<PuntosDeVenta, String>(
-          id: 'Domicilios',
-          domainFn: (PuntosDeVenta punto, __) => punto.nombre,
-          measureFn: (PuntosDeVenta punto, __) => punto.valor,
-          data: domicilios,
-          colorFn: (_, __) => charts.ColorUtil.fromDartColor(Colors.orange),
-        ),
-        charts.Series<PuntosDeVenta, String>(
-          id: 'Restaurante',
-          domainFn: (PuntosDeVenta punto, __) => punto.nombre,
-          measureFn: (PuntosDeVenta punto, __) => punto.valor,
-          data: uberEats,
-          colorFn: (_, __) => charts.ColorUtil.fromDartColor(Colors.blue),
-        ),
-      ];
-    }
-
-    List<charts.Series<PuntosDeVenta, String>> _dataPlataforma() {
-      return [
-        charts.Series<PuntosDeVenta, String>(
-          id: 'Chefmenu',
-          domainFn: (PuntosDeVenta punto, __) => punto.nombre,
-          measureFn: (PuntosDeVenta punto, __) => punto.valor,
-          data: chefMenu,
-          colorFn: (_, __) => charts.ColorUtil.fromDartColor(Colors.purple),
-        ),
-        charts.Series<PuntosDeVenta, String>(
-          id: 'Domicilios',
-          domainFn: (PuntosDeVenta punto, __) => punto.nombre,
-          measureFn: (PuntosDeVenta punto, __) => punto.valor,
-          data: domicilios,
-          colorFn: (_, __) => charts.ColorUtil.fromDartColor(Colors.red),
-        ),
-        charts.Series<PuntosDeVenta, String>(
-          id: 'uberEats',
-          domainFn: (PuntosDeVenta punto, __) => punto.nombre,
-          measureFn: (PuntosDeVenta punto, __) => punto.valor,
-          data: uberEats,
-          colorFn: (_, __) => charts.ColorUtil.fromDartColor(Colors.green),
-        ),
-        charts.Series<PuntosDeVenta, String>(
-          id: 'Rappi',
-          domainFn: (PuntosDeVenta punto, __) => punto.nombre,
-          measureFn: (PuntosDeVenta punto, __) => punto.valor,
-          data: rappi,
-          colorFn: (_, __) => charts.ColorUtil.fromDartColor(Colors.orange),
-        )
-      ];
-    }
-
+    getPrimaryColor(context);
+    data = fechaInicial == null || fechaFinal == null
+        ? dataPedidosDia.where((i) => i.day.day < 13).toList()
+        : dataPedidosDia
+            .where((i) =>
+                i.day.isAfter(fechaInicial.add(Duration(days: -1))) &&
+                i.day.isBefore(fechaFinal.add(Duration(days: 1))))
+            .toList();
     return SafeArea(
       bottom: true,
       top: false,
       child: DefaultTabController(
-        length: 3,
+        length: 2,
         child: Scaffold(
           appBar: AppBar(
-            backgroundColor: Color(0xff1976d2),
+            backgroundColor: getPrimaryColor(context),
             bottom: TabBar(
               indicatorColor: Color(0xff9962D0),
               tabs: [
                 Tab(
-                  child: Text("Totales"),
+                  child: Text("Cantidad"),
                 ),
                 Tab(
-                  child: Text("Punto de venta"),
-                ),
-                Tab(
-                  child: Text("Plataforma"),
+                  child: Text("Valor"),
                 ),
               ],
             ),
-            title: Text('Ventas'),
+            title: Column(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 16,
+                  ),
+                  Row(children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        image: DecorationImage(
+                          image: NetworkImage(
+                              'https://chefmenu.co/restaurantes/bogota/tiendas-d1/tiendas-d1-logo.jpg'),
+                        ),
+                      ),
+                      height: 24,
+                      width: 24,
+                    ),
+                    Text('   Ventas')
+                  ]),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        ButtonTheme(
+                          minWidth: MediaQuery.of(context).size.width / 3,
+                          child: RaisedButton(
+                              color: getPrimaryColor(context),
+                              textColor: Colors.white,
+                              child: Text(fechaInicial != null
+                                  ? "${fechaInicial.day}/${fechaInicial.month}/${fechaInicial.year}"
+                                  : 'Fecha inicial'),
+                              onPressed: () {
+                                showDatePicker(
+                                  context: context,
+                                  initialDate: fechaInicial != null
+                                      ? fechaInicial
+                                      : DateTime.now(),
+                                  firstDate: dataPedidosDia.first.day,
+                                  lastDate: DateTime.now(),
+                                ).then((v) {
+                                  fechaInicial = v;
+                                  setState(() {});
+                                });
+                              }),
+                        ),
+                        ButtonTheme(
+                          minWidth: MediaQuery.of(context).size.width / 3,
+                          child: RaisedButton(
+                              color: getPrimaryColor(context),
+                              textColor: Colors.white,
+                              child: Text(fechaFinal != null
+                                  ? "${fechaFinal.day}/${fechaFinal.month}/${fechaFinal.year}"
+                                  : 'Fecha final'),
+                              onPressed: () {
+                                showDatePicker(
+                                  context: context,
+                                  initialDate: fechaFinal != null
+                                      ? fechaFinal
+                                      : fechaInicial != null
+                                          ? fechaInicial.add(Duration(days: 10))
+                                          : DateTime.now(),
+                                  firstDate: fechaInicial,
+                                  lastDate:
+                                      (fechaInicial.add(Duration(days: 10))),
+                                ).then((v) {
+                                  fechaFinal = v;
+                                  setState(() {});
+                                });
+                              }),
+                        )
+                      ]),
+                ]),
           ),
           body: TabBarView(
             children: [
@@ -207,62 +277,41 @@ class VentasPage extends StatelessWidget {
                       Card(
                         elevation: 4,
                         child: Container(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Text('Ventas totales',
-                                    style: TextStyle(
-                                        fontSize: 16, color: Colors.black45)),
-                              ),
-                              Text(
-                                '\$ ${(formato.format(ventasTotales))}',
-                                style: TextStyle(fontSize: 40),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                      Card(
-                        elevation: 4,
-                        child: Container(
                           padding: EdgeInsets.all(8),
                           child: Column(
                             children: <Widget>[
                               Align(
                                 alignment: Alignment.topLeft,
                                 child: Text(
-                                  'Canales de venta',
+                                  'Cantidad de pedidos',
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                               ),
                               Container(
                                 width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.45,
-                                child: charts.PieChart(
-                                  _dataCanales(),
+                                height: MediaQuery.of(context).size.height *
+                                    (data.length / 10),
+                                child: charts.BarChart(
+                                  _dataPedidosDiaCant(),
+                                  vertical: false,
                                   animate: true,
+                                  barRendererDecorator:
+                                      new charts.BarLabelDecorator<String>(),
+                                  domainAxis: new charts.OrdinalAxisSpec(
+                                      renderSpec: new charts.NoneRenderSpec()),
                                   behaviors: [
                                     charts.DatumLegend(
-                                      horizontalFirst: false,
-                                      showMeasures: true,
-                                      desiredMaxColumns: 1,
-                                      outsideJustification:
-                                          charts.OutsideJustification.start,
-                                      legendDefaultMeasure: charts
-                                          .LegendDefaultMeasure.firstValue,
-                                    ),
+                                        horizontalFirst: false,
+                                        showMeasures: true,
+                                        // desiredMaxRows: 2,
+                                        // desiredMaxColumns: 2,
+                                        outsideJustification:
+                                            charts.OutsideJustification.start,
+                                        legendDefaultMeasure: charts
+                                            .LegendDefaultMeasure.firstValue,
+                                        insideJustification: charts
+                                            .InsideJustification.topStart),
                                   ],
-                                  defaultRenderer: charts.ArcRendererConfig(
-                                      arcRendererDecorators: [
-                                        charts.ArcLabelDecorator(
-                                            labelPosition:
-                                                charts.ArcLabelPosition.auto),
-                                      ]),
                                 ),
                               ),
                             ],
@@ -278,32 +327,35 @@ class VentasPage extends StatelessWidget {
                               Align(
                                 alignment: Alignment.topLeft,
                                 child: Text(
-                                  'Ventas totales',
+                                  'Cantidad de pedidos por tienda',
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                               ),
                               Container(
                                 width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.45,
-                                child: charts.PieChart(
-                                  _dataVentas(),
+                                height: MediaQuery.of(context).size.height *
+                                    (dataPedidosTienda.length / 30),
+                                child: charts.BarChart(
+                                  _dataPedidosTiendaCant(),
+                                  vertical: false,
                                   animate: true,
-                                  behaviors: [
-                                    charts.DatumLegend(
-                                      desiredMaxColumns: 1,
-                                      outsideJustification:
-                                          charts.OutsideJustification.start,
-                                      legendDefaultMeasure: charts
-                                          .LegendDefaultMeasure.firstValue,
-                                    )
-                                  ],
-                                  defaultRenderer: charts.ArcRendererConfig(
-                                      arcRendererDecorators: [
-                                        charts.ArcLabelDecorator(
-                                            labelPosition:
-                                                charts.ArcLabelPosition.auto)
-                                      ]),
+                                  barRendererDecorator:
+                                      new charts.BarLabelDecorator<String>(),
+                                  domainAxis: new charts.OrdinalAxisSpec(
+                                      renderSpec: new charts.NoneRenderSpec()),
+                                  // behaviors: [
+                                  //   charts.DatumLegend(
+                                  //       horizontalFirst: false,
+                                  //       showMeasures: true,
+                                  //       // desiredMaxRows: 2,
+                                  //       // desiredMaxColumns: 2,
+                                  //       outsideJustification:
+                                  //           charts.OutsideJustification.start,
+                                  //       legendDefaultMeasure: charts
+                                  //           .LegendDefaultMeasure.firstValue,
+                                  //       insideJustification: charts
+                                  //           .InsideJustification.topStart),
+                                  // ],
                                 ),
                               ),
                             ],
@@ -327,403 +379,83 @@ class VentasPage extends StatelessWidget {
                               Align(
                                 alignment: Alignment.topLeft,
                                 child: Text(
-                                  'Ventas por punto de venta',
+                                  'Valor de pedidos por dia',
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                               ),
                               Container(
                                 width: MediaQuery.of(context).size.width,
-                                height: MediaQuery.of(context).size.height,
+                                height: MediaQuery.of(context).size.height *
+                                    (data.length / 10),
                                 child: charts.BarChart(
-                                  _dataPuntos(),
-                                  primaryMeasureAxis: charts.NumericAxisSpec(
-                                      tickProviderSpec:
-                                          charts.BasicNumericTickProviderSpec(
-                                              desiredMinTickCount: 5)),
+                                  _dataPedidosDiaVal(),
                                   vertical: false,
                                   animate: true,
+                                  barRendererDecorator:
+                                      new charts.BarLabelDecorator<String>(),
+                                  domainAxis: new charts.OrdinalAxisSpec(
+                                      renderSpec: new charts.NoneRenderSpec()),
                                   behaviors: [
-                                    charts.SeriesLegend(
-                                      outsideJustification: charts
-                                          .OutsideJustification.endDrawArea,
-                                    ),
+                                    charts.DatumLegend(
+                                        horizontalFirst: false,
+                                        showMeasures: true,
+                                        // desiredMaxRows: 2,
+                                        // desiredMaxColumns: 2,
+                                        outsideJustification:
+                                            charts.OutsideJustification.start,
+                                        legendDefaultMeasure: charts
+                                            .LegendDefaultMeasure.firstValue,
+                                        insideJustification: charts
+                                            .InsideJustification.topStart),
                                   ],
-                                  barGroupingType:
-                                      charts.BarGroupingType.grouped,
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ),
                       ),
                       Card(
-                        child: Column(
-                          children: <Widget>[
-                            SizedBox(height: 16),
-                            Center(
-                                child: Text(
-                              'Ventas por punto de venta',
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            )),
-                            SizedBox(height: 16),
-                            DataTable(
-                              columnSpacing:
-                                  MediaQuery.of(context).size.width * 0.05,
-                              columns: [
-                                DataColumn(label: Text('Sedes')),
-                                DataColumn(
-                                  label: Container(
-                                    width: 40,
-                                    height: 40,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          fit: BoxFit.fill,
-                                          image:
-                                              AssetImage("assets/ridder.jpeg")),
-                                    ),
-                                  ),
-                                ),
-                                DataColumn(
-                                  label: Container(
-                                    width: 35,
-                                    height: 40,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          fit: BoxFit.fill,
-                                          image: NetworkImage(
-                                              "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTBa3GKIXSk8rN2DlUfkSA_g-cpATEpoAdCg2jzH8p9RmoJ3_h9&usqp=CAU")),
-                                    ),
-                                  ),
-                                ),
-                                DataColumn(
-                                  label: Container(
-                                    width: 35,
-                                    height: 40,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          fit: BoxFit.fill,
-                                          image: NetworkImage(
-                                              "https://as1.ftcdn.net/jpg/02/14/80/30/500_F_214803030_YXG1yaWJ12K6TdBx166hdt4XXF2PNPNm.jpg")),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                              rows: [
-                                DataRow(
-                                  selected: true,
-                                  cells: [
-                                    DataCell(Text('Bogota Cedritos')),
-                                    DataCell(Text('24000')),
-                                    DataCell(Text('50000')),
-                                    DataCell(Text('70000')),
-                                  ],
-                                ),
-                                DataRow(
-                                  cells: [
-                                    DataCell(Text('Bogota Chapinero')),
-                                    DataCell(Text('910003')),
-                                    DataCell(Text('986364')),
-                                    DataCell(Text('475613')),
-                                  ],
-                                ),
-                                DataRow(
-                                  selected: true,
-                                  cells: [
-                                    DataCell(Text('Bogota Plaza')),
-                                    DataCell(Text('500000')),
-                                    DataCell(Text('600000')),
-                                    DataCell(Text('800000')),
-                                  ],
-                                ),
-                                DataRow(
-                                  cells: [
-                                    DataCell(Text('Bogota Kennedy')),
-                                    DataCell(Text('500000')),
-                                    DataCell(Text('600000')),
-                                    DataCell(Text('800000')),
-                                  ],
-                                ),
-                                DataRow(
-                                  selected: true,
-                                  cells: [
-                                    DataCell(Text('Chia')),
-                                    DataCell(Text('805000')),
-                                    DataCell(Text('86000')),
-                                    DataCell(Text('100000')),
-                                  ],
-                                ),
-                                DataRow(
-                                  cells: [
-                                    DataCell(Text('Cartagena')),
-                                    DataCell(Text('805000')),
-                                    DataCell(Text('86000')),
-                                    DataCell(Text('100000')),
-                                  ],
-                                ),
-                                DataRow(
-                                  selected: true,
-                                  cells: [
-                                    DataCell(Text('Bog. Centro Mayor')),
-                                    DataCell(Text('805000')),
-                                    DataCell(Text('86000')),
-                                    DataCell(Text('100000')),
-                                  ],
-                                ),
-                                DataRow(
-                                  cells: [
-                                    DataCell(Text('Bogota Fontibon')),
-                                    DataCell(Text('805000')),
-                                    DataCell(Text('86000')),
-                                    DataCell(Text('100000')),
-                                  ],
-                                ),
-                                DataRow(
-                                  selected: true,
-                                  cells: [
-                                    DataCell(Text('Bogota Suba')),
-                                    DataCell(Text('805000')),
-                                    DataCell(Text('86000')),
-                                    DataCell(Text('100000')),
-                                  ],
-                                ),
-                                DataRow(
-                                  cells: [
-                                    DataCell(Text('Medellin')),
-                                    DataCell(Text('805000')),
-                                    DataCell(Text('86000')),
-                                    DataCell(Text('100000')),
-                                  ],
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SingleChildScrollView(
-                child: Container(
-                  child: Column(
-                    children: <Widget>[
-                      Card(
                         elevation: 4,
                         child: Container(
-                          //height: MediaQuery.of(context).size.height,
                           padding: EdgeInsets.all(8),
                           child: Column(
                             children: <Widget>[
                               Align(
                                 alignment: Alignment.topLeft,
                                 child: Text(
-                                  'Ventas por plataforma',
+                                  'Valor de pedidos por tienda',
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                               ),
                               Container(
                                 width: MediaQuery.of(context).size.width,
-                                height: MediaQuery.of(context).size.height,
+                                height: MediaQuery.of(context).size.height *
+                                    (dataPedidosTienda.length / 30),
                                 child: charts.BarChart(
-                                  _dataPlataforma(),
-                                  primaryMeasureAxis: charts.NumericAxisSpec(
-                                      tickProviderSpec:
-                                          charts.BasicNumericTickProviderSpec(
-                                              desiredMinTickCount: 5)),
+                                  _dataPedidosTiendaVal(),
                                   vertical: false,
                                   animate: true,
-                                  behaviors: [
-                                    charts.SeriesLegend(
-                                      outsideJustification: charts
-                                          .OutsideJustification.endDrawArea,
-                                    ),
-                                  ],
-                                  barGroupingType:
-                                      charts.BarGroupingType.grouped,
+                                  barRendererDecorator:
+                                      new charts.BarLabelDecorator<String>(),
+                                  domainAxis: new charts.OrdinalAxisSpec(
+                                      renderSpec: new charts.NoneRenderSpec()),
+                                  // behaviors: [
+                                  //   charts.DatumLegend(
+                                  //       horizontalFirst: false,
+                                  //       showMeasures: true,
+                                  //       // desiredMaxRows: 2,
+                                  //       // desiredMaxColumns: 2,
+                                  //       outsideJustification:
+                                  //           charts.OutsideJustification.start,
+                                  //       legendDefaultMeasure: charts
+                                  //           .LegendDefaultMeasure.firstValue,
+                                  //       insideJustification: charts
+                                  //           .InsideJustification.topStart),
+                                  // ],
                                 ),
-                              )
+                              ),
                             ],
                           ),
-                        ),
-                      ),
-                      Card(
-                        elevation: 4,
-                        child: Column(
-                          children: <Widget>[
-                            SizedBox(height: 16),
-                            Center(
-                                child: Text(
-                              'Ventas por plataforma',
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            )),
-                            SizedBox(height: 16),
-                            DataTable(
-                              columnSpacing:
-                                  MediaQuery.of(context).size.width * 0.02,
-                              columns: [
-                                DataColumn(label: Text('Sedes')),
-                                DataColumn(
-                                  label: Container(
-                                    width: 40,
-                                    height: 40,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          fit: BoxFit.fill,
-                                          image: AssetImage(
-                                              "assets/logo_chef.png")),
-                                    ),
-                                  ),
-                                ),
-                                DataColumn(
-                                  label: Container(
-                                    width: 35,
-                                    height: 40,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          fit: BoxFit.fill,
-                                          image: NetworkImage(
-                                              "https://img.pystatic.com/whitelabel/domicilios/social_image.png")),
-                                    ),
-                                  ),
-                                ),
-                                DataColumn(
-                                  label: Container(
-                                    width: 35,
-                                    height: 40,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          fit: BoxFit.fill,
-                                          image: NetworkImage(
-                                              "https://lh3.googleusercontent.com/9xqvAl1nJlwWlCEONxSzKr4HHdgf3brNuyuggZtR-0I1B6r7SEOTDhgeFhWIA3NBtA")),
-                                    ),
-                                  ),
-                                ),
-                                DataColumn(
-                                  label: Container(
-                                    width: 35,
-                                    height: 40,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          fit: BoxFit.fill,
-                                          image: NetworkImage(
-                                              "https://static.chollometro.com/threads/thread_full_screen/default/308909_1.jpg")),
-                                    ),
-                                  ),
-                                ),
-                                DataColumn(
-                                  label: Container(
-                                    width: 35,
-                                    height: 40,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          fit: BoxFit.fill,
-                                          image: NetworkImage(
-                                              "https://static.chollometro.com/threads/thread_full_screen/default/308909_1.jpg")),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                              rows: [
-                                DataRow(
-                                  selected: true,
-                                  cells: [
-                                    DataCell(Text('Bogota Cedritos')),
-                                    DataCell(Text('42')),
-                                    DataCell(Text('11')),
-                                    DataCell(Text('20')),
-                                    DataCell(Text('12')),
-                                    DataCell(Text('12')),
-                                  ],
-                                ),
-                                DataRow(
-                                  cells: [
-                                    DataCell(Text('Bogota Chapinero')),
-                                    DataCell(Text('64')),
-                                    DataCell(Text('34')),
-                                    DataCell(Text('53')),
-                                    DataCell(Text('53')),
-                                    DataCell(Text('53')),
-                                  ],
-                                ),
-                                DataRow(
-                                  selected: true,
-                                  cells: [
-                                    DataCell(Text('Bogota Plaza')),
-                                    DataCell(Text('50')),
-                                    DataCell(Text('50')),
-                                    DataCell(Text('60')),
-                                    DataCell(Text('80')),
-                                    DataCell(Text('80')),
-                                  ],
-                                ),
-                                DataRow(
-                                  cells: [
-                                    DataCell(Text('Chia')),
-                                    DataCell(Text('85')),
-                                    DataCell(Text('85')),
-                                    DataCell(Text('80')),
-                                    DataCell(Text('10')),
-                                    DataCell(Text('10')),
-                                  ],
-                                ),
-                                DataRow(
-                                  selected: true,
-                                  cells: [
-                                    DataCell(Text('Cartagena')),
-                                    DataCell(Text('85')),
-                                    DataCell(Text('85')),
-                                    DataCell(Text('80')),
-                                    DataCell(Text('10')),
-                                    DataCell(Text('10')),
-                                  ],
-                                ),
-                                DataRow(
-                                  cells: [
-                                    DataCell(Text('Bog. Centro Mayor')),
-                                    DataCell(Text('85')),
-                                    DataCell(Text('85')),
-                                    DataCell(Text('80')),
-                                    DataCell(Text('10')),
-                                    DataCell(Text('10')),
-                                  ],
-                                ),
-                                DataRow(
-                                  selected: true,
-                                  cells: [
-                                    DataCell(Text('Bogota Fontibon')),
-                                    DataCell(Text('85')),
-                                    DataCell(Text('85')),
-                                    DataCell(Text('80')),
-                                    DataCell(Text('10')),
-                                    DataCell(Text('10')),
-                                  ],
-                                ),
-                                DataRow(
-                                  cells: [
-                                    DataCell(Text('Bogota Suba')),
-                                    DataCell(Text('85')),
-                                    DataCell(Text('85')),
-                                    DataCell(Text('80')),
-                                    DataCell(Text('10')),
-                                    DataCell(Text('10')),
-                                  ],
-                                ),
-                                DataRow(
-                                  selected: true,
-                                  cells: [
-                                    DataCell(Text('Bogota Suba')),
-                                    DataCell(Text('85')),
-                                    DataCell(Text('85')),
-                                    DataCell(Text('80')),
-                                    DataCell(Text('10')),
-                                    DataCell(Text('10')),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
                         ),
                       ),
                     ],
@@ -738,23 +470,18 @@ class VentasPage extends StatelessWidget {
   }
 }
 
-class Venta {
-  final String title;
+class PedidosDia {
+  final DateTime day;
+  final int amount;
   final int value;
-  final Color color;
-  Venta(this.title, this.value, this.color);
+
+  PedidosDia(this.day, this.amount, this.value);
 }
 
-class Ventas {
-  final String tipo;
-  final int valor;
-  final Color color;
-  Ventas(this.tipo, this.valor, this.color);
-}
+class PedidosTienda {
+  final String shop;
+  final int amount;
+  final int value;
 
-class PuntosDeVenta {
-  final String nombre;
-  final double valor;
-
-  PuntosDeVenta(this.nombre, this.valor);
+  PedidosTienda(this.shop, this.amount, this.value);
 }

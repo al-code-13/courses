@@ -1,6 +1,7 @@
 import 'package:biometric_auth/src/pages/main_indicators.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 import 'backend/authentication_bloc/authentication_bloc.dart';
 import 'backend/authentication_bloc/authentication_event.dart';
@@ -34,7 +35,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+  final theme = Provider.of<AuthenticationBloc>(context);
     return MaterialApp(
+      
+      theme: theme.getTheme(),
       routes: {
         '/mainIndicators': (context) => MainIndicators(),
         '/homePage': (context) => HomePage(),

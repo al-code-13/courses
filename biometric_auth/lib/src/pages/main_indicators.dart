@@ -3,6 +3,7 @@ import 'package:biometric_auth/src/custom_grid_view/src/widgets/staggered_tile.d
 import 'package:biometric_auth/src/pages/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
 import 'example_view.dart';
@@ -81,9 +82,14 @@ List<Widget> _tiles = const <Widget>[
   // ),
 ];
 
-class MainIndicators extends StatelessWidget {
+class MainIndicators extends StatefulWidget {
   const MainIndicators({Key key}) : super(key: key);
 
+  @override
+  _MainIndicatorsState createState() => _MainIndicatorsState();
+}
+
+class _MainIndicatorsState extends State<MainIndicators> {
   @override
   Widget build(BuildContext context) {
     List<StaggeredTile> _staggeredTiles = const <StaggeredTile>[
@@ -99,15 +105,16 @@ class MainIndicators extends StatelessWidget {
       backgroundColor: colorFondo,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.lightBlue,
+        backgroundColor: Theme.of(context).appBarTheme.color,
         centerTitle: true,
         title: Text(
-          'Indicadores Globales',
+          'Indicadores Globales',style: TextStyle(color: Theme.of(context).appBarTheme.textTheme.body1.color),
         ),
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 12.0),
         child: StaggeredGridView.count(
+          physics: NeverScrollableScrollPhysics(),
           crossAxisCount: 4,
           staggeredTiles: _staggeredTiles,
           children: _tiles,
@@ -118,12 +125,11 @@ class MainIndicators extends StatelessWidget {
       ),
       bottomNavigationBar: Container(
         height: 60,
-        color: Colors.lightBlue,
+        color: Theme.of(context).appBarTheme.color,
         child: InkWell(
           onTap: () {
             Navigator.of(context).push(
-              MaterialPageRoute(
-                  builder: (BuildContext context) => HomePage()),
+              MaterialPageRoute(builder: (BuildContext context) => HomePage()),
             );
           },
           child: Padding(
@@ -133,12 +139,13 @@ class MainIndicators extends StatelessWidget {
               children: <Widget>[
                 Icon(
                   Icons.home,
-                  color: Colors.white,
+                  color: Theme.of(context).appBarTheme.textTheme.body1.color,
                 ),
                 SizedBox(width: 10),
                 Text(
                   'Detalles',
-                  style: TextStyle(fontSize: 20),
+                  style: TextStyle(
+                      fontSize: 20, color: Theme.of(context).appBarTheme.textTheme.body1.color),
                 )
               ],
             ),

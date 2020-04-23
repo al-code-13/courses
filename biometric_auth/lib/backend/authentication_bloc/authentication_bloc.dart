@@ -1,16 +1,26 @@
+import 'package:biometric_auth/backend/style/themeData.dart';
 import 'package:biometric_auth/backend/user_repository/user_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 import 'bloc.dart';
 
-class AuthenticationBloc
-    extends Bloc<AuthenticationEvent, AuthenticationState>  {
-
-  final UserRepository _userRepository;
-  AuthenticationBloc({@required UserRepository userRepository})
+class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>
+    with ChangeNotifier {
+  AuthenticationBloc({@required UserRepository userRepository, this.themeData})
       : assert(userRepository != null),
         _userRepository = userRepository;
+  ThemeData themeData;
+
+  getTheme() => themeData;
+  setTheme(bool value) {
+    value ? themeData = d1() : themeData = exito();
+
+    notifyListeners();
+  }
+
+  final UserRepository _userRepository;
   @override
   AuthenticationState get initialState => Uninitialized();
 
@@ -21,7 +31,7 @@ class AuthenticationBloc
       yield* _mapAppStartedToState();
     }
     if (event is LoggedIn) {
-      yield*  _mapLoggedInToState();
+      yield* _mapLoggedInToState();
     }
     if (event is LoggedInWithOutEmail) {
       yield* _mapLoggedInWithOutEmailToState();
@@ -29,7 +39,7 @@ class AuthenticationBloc
     if (event is LoggedOut) {
       yield* _mapLoggedOutToState();
     }
-    if(event is OtherMethods){
+    if (event is OtherMethods) {
       yield* _mapOtherMethodsToState();
     }
   }
@@ -64,8 +74,7 @@ class AuthenticationBloc
   Stream<AuthenticationState> _mapLoggedOutToState() async* {
     yield Unauthenticated();
   }
-  
-  
+
   Stream<AuthenticationState> _mapOtherMethodsToState() async* {
     yield OtherMethodsState();
   }

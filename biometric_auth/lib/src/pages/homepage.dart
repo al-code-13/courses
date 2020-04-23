@@ -84,7 +84,8 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: colorFondo,
       appBar: AppBar(
-        backgroundColor: Colors.lightBlue,
+        backgroundColor: Theme.of(context).appBarTheme.color,
+        centerTitle: true,
         title: Text(
           'Gerentes',
         ),

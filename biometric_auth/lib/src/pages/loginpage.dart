@@ -1,4 +1,4 @@
-import 'dart:io';
+
 import 'package:biometric_auth/backend/authentication_bloc/authentication_bloc.dart';
 import 'package:biometric_auth/backend/authentication_bloc/authentication_event.dart';
 import 'package:biometric_auth/backend/bloc/bloc.dart';
@@ -8,8 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:provider/provider.dart';
 import 'dart:ui';
-import 'homepage.dart';
+
 
 class LoginPage extends StatefulWidget {
   final UserRepository _userRepository;
@@ -83,9 +84,10 @@ class _LoginPageState extends State<LoginPage> {
   double _sigmaX = 0.0; // from 0-10
   double _sigmaY = 0.0; // from 0-10
   double _opacity = 0.3; // from 0-1.0
-
+  bool valueTheme = false;
   @override
   Widget build(BuildContext context) {
+    AuthenticationBloc _themeChanger = Provider.of<AuthenticationBloc>(context);
     final size = MediaQuery.of(context).size;
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
@@ -299,20 +301,45 @@ class _LoginPageState extends State<LoginPage> {
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(8)),
-                                      onPressed:
-                                          password != null && user != null
-                                              ? () {
-                                                  if (password == "admin" &&
-                                                      user == "admin") {
-                                                    Navigator.of(context).push(
-                                                      MaterialPageRoute(
-                                                          builder: (BuildContext
-                                                                  context) =>
-                                                              MainIndicators()),
-                                                    );
-                                                  }
-                                                }
-                                              : null,
+                                      onPressed: password != null &&
+                                              user != null
+                                          ? () {
+                                              if (password == "exito" &&
+                                                  user == "exito") {
+                                                  setState(() {
+                                                    
+                                                  });
+                                                valueTheme = false;
+
+                                                _themeChanger
+                                                    .setTheme(valueTheme);
+                                                Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                    builder: (BuildContext
+                                                            context) =>
+                                                        MainIndicators(),
+                                                  ),
+                                                );
+                                              }
+                                              if (password == "d1" &&
+                                                  user == "d1") {
+                                                print("object");
+                                                setState(() {
+                                                    
+                                                  });
+                                                valueTheme = true;
+                                                _themeChanger
+                                                    .setTheme(valueTheme);
+                                                Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                    builder: (BuildContext
+                                                            context) =>
+                                                        MainIndicators(),
+                                                  ),
+                                                );
+                                              }
+                                            }
+                                          : null,
                                       child: Text(
                                         'Login',
                                         style: TextStyle(
