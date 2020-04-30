@@ -1,63 +1,54 @@
-import 'package:biometric_auth/backend/utils/validators.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:biometric_auth/backend/authentication_bloc/bloc.dart';
+import 'package:biometric_auth/backend/data/dataModel.dart';
+import 'package:biometric_auth/backend/service/interactor.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rxdart/rxdart.dart';
-import '../user_repository/user_repository.dart';
+
 
 import 'bloc.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  UserRepository _userRepository;
-  LoginBloc({@required UserRepository userRepository})
-      : assert(userRepository != null),
-        _userRepository = userRepository;
+
 
   @override
-  LoginState get initialState => LoginState.empty();
+  LoginState get initialState => LoginState();
 
   @override
-  Stream<LoginState> transformEvents(
-      Stream<LoginEvent> events, Stream<LoginState> Function(LoginEvent) next) {
-    final nonDebounceStream = events.where((event) {
-      return (event is! EmailChanged && event is! PasswordChanged);
-    });
-    final debounceStream = events.where((event) {
-      return (event is EmailChanged || event is PasswordChanged);
-    }).debounceTime(Duration(milliseconds: 300));
-    return super
-        .transformEvents(nonDebounceStream.mergeWith([debounceStream]), next);
-  }
+
 
   @override
   Stream<LoginState> mapEventToState(LoginEvent event) async* {
-    if (event is EmailChanged) {
-      yield* _mapEmailChangedToState(event.email);
+    
+    if (event is LoginWithUserAndPassword) {
+      yield* _mapLoginWithUserAndPasswordToState(
+          user: event.user, password: event.password);
     }
-    if (event is PasswordChanged) {
-      yield* _mapPasswordChangedToState(event.password);
-    }
-    if (event is LoginWithEmailAndPassword) {
-      yield* _mapLoginWithEmailAndPasswordToState(
-          email: event.email, password: event.password);
+    if (event is LogOut){
+      yield* _mapLogOutUserWithToken(token: event.token);
     }
   }
 
-  Stream<LoginState> _mapEmailChangedToState(String email) async* {
-    yield state.update(isEmailValid: Validators.isValidEmail(email));
-  }
-
-  Stream<LoginState> _mapPasswordChangedToState(String password) async* {
-    yield state.update(isPasswordValid: Validators.isValidPassword(password));
-  }
-
-  Stream<LoginState> _mapLoginWithEmailAndPasswordToState(
-      {String email, String password}) async* {
-    yield LoginState.loading();
+  Stream<LoginState> _mapLoginWithUserAndPasswordToState(
+      {String user, String password}) async* {
+    yield Loading();
     try {
-      await _userRepository.logInEmail(email, password);
-      yield LoginState.success();
+     var users = await  ServiceInteractor().loginPost(Credentials(user:user,password:password));
+
+      yield Success(users);
+
     } catch (_) {
-      yield LoginState.failure();
+      yield Failure();
     }
   }
+  Stream<LoginState> _mapLogOutUserWithToken(
+    {String token}) async*{
+    yield Loading();
+    try {
+     await  ServiceInteractor().logoutDelete(token);
+      yield LogOutSuccess();
+    } catch (e) {
+      yield Failure();
+    }
+
+    }
 }

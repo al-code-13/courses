@@ -31,6 +31,10 @@ ThemeData d1() {
           // fontSize: 20,
           color: Colors.white,
         ),
+        display1:  TextStyle(
+          // fontSize: 20,
+          color: Colors.black,
+        ),
       ));
 }
 
@@ -61,9 +65,7 @@ ThemeData exito() {
           color: Colors.white,
         ),
         caption: TextStyle(
-          fontFamily: 'montserrat-thin',
-          fontSize: 20,
-          color: Colors.white,
+          color: Colors.black,
         ),
       ));
 }

@@ -1,5 +1,5 @@
+import 'package:biometric_auth/backend/data/dataModel.dart';
 import 'package:equatable/equatable.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meta/meta.dart';
 
 abstract class AuthenticationState extends Equatable {
@@ -17,7 +17,7 @@ class Uninitialized extends AuthenticationState {
 }
 // Autenticado -> Home
 class Authenticated extends AuthenticationState {
-  final FirebaseUser user;
+  final Login user;
   const Authenticated({@required this.user});
   @override
   List<Object> get props => [user];

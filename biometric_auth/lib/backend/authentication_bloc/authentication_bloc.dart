@@ -1,26 +1,14 @@
-import 'package:biometric_auth/backend/style/themeData.dart';
-import 'package:biometric_auth/backend/user_repository/user_repository.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:biometric_auth/backend/data/dataModel.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meta/meta.dart';
+
 import 'bloc.dart';
+
+ThemeData themeData;
 
 class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>
     with ChangeNotifier {
-  AuthenticationBloc({@required UserRepository userRepository, this.themeData})
-      : assert(userRepository != null),
-        _userRepository = userRepository;
-  ThemeData themeData;
-
-  getTheme() => themeData;
-  setTheme(bool value) {
-    value ? themeData = d1() : themeData = exito();
-
-    notifyListeners();
-  }
-
-  final UserRepository _userRepository;
   @override
   AuthenticationState get initialState => Uninitialized();
 
@@ -31,7 +19,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>
       yield* _mapAppStartedToState();
     }
     if (event is LoggedIn) {
-      yield* _mapLoggedInToState();
+      yield* _mapLoggedInToState(event.user);
     }
     if (event is LoggedInWithOutEmail) {
       yield* _mapLoggedInWithOutEmailToState();
@@ -39,31 +27,17 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>
     if (event is LoggedOut) {
       yield* _mapLoggedOutToState();
     }
-    if (event is OtherMethods) {
-      yield* _mapOtherMethodsToState();
-    }
   }
 
   Stream<AuthenticationState> _mapAppStartedToState() async* {
     try {
-      final isSignedIn = await _userRepository.isSignedIn();
-      if (isSignedIn) {
-        final user = await _userRepository.getUser();
-        if (user.email != null) {
-          yield Authenticated(user: user);
-        } else {
-          yield AuthenticatedWithOutEmail();
-        }
-      } else {
-        yield Unauthenticated();
-      }
+      yield Unauthenticated();
     } catch (_) {
       yield Unauthenticated();
     }
   }
 
-  Stream<AuthenticationState> _mapLoggedInToState() async* {
-    FirebaseUser user = await _userRepository.getUser();
+  Stream<AuthenticationState> _mapLoggedInToState(Login user) async* {
     yield Authenticated(user: user);
   }
 

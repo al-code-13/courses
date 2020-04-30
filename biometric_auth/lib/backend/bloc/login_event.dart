@@ -7,28 +7,11 @@ abstract class LoginEvent extends Equatable {
   List<Object> get props => [];
 }
 
-//Email Changed
-class EmailChanged extends LoginEvent {
-  final String email;
-  const EmailChanged({@required this.email});
-  @override
-  List<Object> get props => [email];
-  @override
-  String toString() {
-    return 'EmailChanged {email:$email}';
-  }
-}
+// logedout
+class LogOut extends LoginEvent{
+  final String token;
 
-//Password changed
-class PasswordChanged extends LoginEvent {
-  final String password;
-  const PasswordChanged({@required this.password});
-  @override
-  List<Object> get props => [password];
-  @override
-  String toString() {
-    return 'PasswordChanged {Password:$password}';
-  }
+  LogOut(this.token);
 }
 
 //Submittign
@@ -44,14 +27,14 @@ class Submitted extends LoginEvent {
   }
 }
 //Login with email
-class LoginWithEmailAndPassword extends LoginEvent {
-  final String email;
+class LoginWithUserAndPassword extends LoginEvent {
+  final String user;
   final String password;
-  const LoginWithEmailAndPassword({@required this.email, this.password});
+  const LoginWithUserAndPassword({@required this.user, this.password});
   @override
-  List<Object> get props => [email, password];
+  List<Object> get props => [user, password];
   @override
   String toString() {
-    return 'LoginWithEmailAndPassword {email:$email,password:$password}';
+    return 'LoginWithUserAndPassword {user:$user,password:$password}';
   }
 }

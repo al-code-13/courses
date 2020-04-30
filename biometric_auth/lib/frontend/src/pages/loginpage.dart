@@ -1,22 +1,16 @@
-
 import 'package:biometric_auth/backend/authentication_bloc/authentication_bloc.dart';
 import 'package:biometric_auth/backend/authentication_bloc/authentication_event.dart';
 import 'package:biometric_auth/backend/bloc/bloc.dart';
-import 'package:biometric_auth/backend/user_repository/user_repository.dart';
-import 'package:biometric_auth/src/pages/main_indicators.dart';
+import 'package:biometric_auth/frontend/src/pages/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:provider/provider.dart';
+
 import 'dart:ui';
 
-
 class LoginPage extends StatefulWidget {
-  final UserRepository _userRepository;
-  LoginPage({Key key, @required UserRepository userRepository})
-      : assert(userRepository != null),
-        _userRepository = userRepository,
+  LoginPage({Key key}):
         super(key: key);
 
   @override
@@ -24,50 +18,23 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+
   LoginBloc _loginBloc;
   final LocalAuthentication auth = LocalAuthentication();
   String user;
   String password;
 
-  UserRepository get _userRepository => widget._userRepository;
-  bool get isPopulated =>
-      _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
-  bool isLoginButtonEnable(LoginState state) {
-    return state.isFormValid && isPopulated && !state.isSubmitting;
-  }
 
   @override
   void initState() {
     super.initState();
     _loginBloc = BlocProvider.of<LoginBloc>(context);
-    _emailController.addListener(_onEmailChanged);
-    _passwordController.addListener(_onPasswordChanged);
-    // _scrollController.addListener(() {
-    //   if (_scrollController.position.pixels ==
-    //       _scrollController.position.maxScrollExtent) {}
-    // });
-  }
 
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
-
-  void _onEmailChanged() {
-    _loginBloc.add(EmailChanged(email: _emailController.text));
-  }
-
-  void _onPasswordChanged() {
-    _loginBloc.add(PasswordChanged(password: _passwordController.text));
   }
 
   void _onFormSubmitted() {
-    _loginBloc.add(LoginWithEmailAndPassword(
-        email: _emailController.text, password: _passwordController.text));
+    _loginBloc.add(LoginWithUserAndPassword(
+        user: user ,password: password));
   }
 
   Widget circulo() {
@@ -87,11 +54,10 @@ class _LoginPageState extends State<LoginPage> {
   bool valueTheme = false;
   @override
   Widget build(BuildContext context) {
-    AuthenticationBloc _themeChanger = Provider.of<AuthenticationBloc>(context);
-    final size = MediaQuery.of(context).size;
+
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
-        if (state.isFailure) {
+        if (state is Failure) {
           Scaffold.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
@@ -107,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             );
         }
-        if (state.isSubmitting) {
+        if (state is Loading) {
           Scaffold.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
@@ -122,8 +88,8 @@ class _LoginPageState extends State<LoginPage> {
               ),
             );
         }
-        if (state.isSuccess) {
-          BlocProvider.of<AuthenticationBloc>(context).add(LoggedIn());
+        if (state is Success) {
+          BlocProvider.of<AuthenticationBloc>(context).add(LoggedIn(state.user));
         }
       },
       child: BlocBuilder<LoginBloc, LoginState>(
@@ -303,41 +269,8 @@ class _LoginPageState extends State<LoginPage> {
                                               BorderRadius.circular(8)),
                                       onPressed: password != null &&
                                               user != null
-                                          ? () {
-                                              if (password == "exito" &&
-                                                  user == "exito") {
-                                                  setState(() {
-                                                    
-                                                  });
-                                                valueTheme = false;
-
-                                                _themeChanger
-                                                    .setTheme(valueTheme);
-                                                Navigator.of(context).push(
-                                                  MaterialPageRoute(
-                                                    builder: (BuildContext
-                                                            context) =>
-                                                        MainIndicators(),
-                                                  ),
-                                                );
-                                              }
-                                              if (password == "d1" &&
-                                                  user == "d1") {
-                                                print("object");
-                                                setState(() {
-                                                    
-                                                  });
-                                                valueTheme = true;
-                                                _themeChanger
-                                                    .setTheme(valueTheme);
-                                                Navigator.of(context).push(
-                                                  MaterialPageRoute(
-                                                    builder: (BuildContext
-                                                            context) =>
-                                                        MainIndicators(),
-                                                  ),
-                                                );
-                                              }
+                                          ? () async {
+                                              _onFormSubmitted();
                                             }
                                           : null,
                                       child: Text(
@@ -413,7 +346,7 @@ class _LoginPageState extends State<LoginPage> {
             //print(authenticated);
             Navigator.of(context).push(
               MaterialPageRoute(
-                  builder: (BuildContext context) => MainIndicators()),
+                  builder: (BuildContext context) => HomePage(login: null,)),
             );
           }
         });
